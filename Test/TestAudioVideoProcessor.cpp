@@ -181,47 +181,47 @@ int main()
     std::string inFile = "F:\\视频\\VIDEO0008.mp4";
     std::string outFile = "test22.mp4";
 
-    //ok = avReader2.open(inFile, true, avp::SampleTypeUnknown, true, avp::PixelTypeBGR24);
-    //int width = avReader2.getVideoWidth();
-    //int height = avReader2.getVideoHeight();
-    //double fps = avReader2.getVideoFrameRate();
-    //int sampleType = avReader2.getAudioSampleType();
-    //int numChannels = avReader2.getAudioNumChannels();
-    //int channelLayout = avReader2.getAudioChannelLayout();
-    //int sampleRate = avReader2.getAudioSampleRate();
-    //std::vector<avp::OutputStreamProperties> props(3);
-    //props[0] = avp::OutputStreamProperties("h264", avp::PixelTypeBGR24, width, height, fps, 4000000);
-    //props[1] = avp::OutputStreamProperties("h264", avp::PixelTypeBGR24, width / 2, height / 2, fps, 1000000);
-    //props[2] = avp::OutputStreamProperties("aac", sampleType, channelLayout, sampleRate, 128000);
-    //options.clear();
-    //options.push_back(std::make_pair("preset", "faster"));
-    //ok = avWriter3.open(outFile, "", true, props, options);
-    ////avReader.seek(1000000.0 / avReader.getVideoFps() * 5 + 0.5, avp::VIDEO);
-    //while (avReader2.read(avFrame))
-    //{
-    //    if (avFrame.mediaType == avp::AUDIO)
-    //    {
-    //        printf("audio frame, ts = %lld, numSamples = %d, numChannels = %d\n",
-    //            avFrame.timeStamp, avFrame.numSamples, avFrame.numChannels);
-    //        avWriter3.write(avFrame, 2);
-    //    }
-    //    else if (avFrame.mediaType == avp::VIDEO)
-    //    {
-    //        cv::Mat src(avFrame.height, avFrame.width, CV_8UC3, avFrame.data[0], avFrame.steps[0]);
-    //        cv::Mat dst;
-    //        cv::resize(src, dst, cv::Size(width / 2, height / 2));
-    //        avWriter3.write(avFrame, 0);
-    //        //avFrame = avp::videoFrame(dst.data, dst.step, avFrame.pixelType, dst.cols, dst.rows, avFrame.timeStamp);
-    //        unsigned char* data[8] = { dst.data, 0 };
-    //        int steps[8] = { dst.step[0], 0 };
-    //        avFrame = avp::AudioVideoFrame2(data, steps, avFrame.pixelType, dst.cols, dst.rows, avFrame.timeStamp);
-    //        avWriter3.write(avFrame, 1);
-    //        //printf("video frame, ts = %lld\n", avFrame.timeStampInMilliSec);
-    //        //cv::Mat show(avFrame.height, avFrame.width, CV_8UC3, avFrame.data, avFrame.step);
-    //        //cv::imshow("show", show);
-    //        //cv::waitKey(20);
-    //    }
-    //}
+    ok = avReader2.open(inFile, true, avp::SampleTypeUnknown, true, avp::PixelTypeBGR24);
+    int width = avReader2.getVideoWidth();
+    int height = avReader2.getVideoHeight();
+    double fps = avReader2.getVideoFrameRate();
+    int sampleType = avReader2.getAudioSampleType();
+    int numChannels = avReader2.getAudioNumChannels();
+    int channelLayout = avReader2.getAudioChannelLayout();
+    int sampleRate = avReader2.getAudioSampleRate();
+    std::vector<avp::OutputStreamProperties> props(3);
+    props[0] = avp::OutputStreamProperties("h264", avp::PixelTypeBGR24, width, height, fps, 4000000);
+    props[1] = avp::OutputStreamProperties("h264", avp::PixelTypeBGR24, width / 2, height / 2, fps, 1000000);
+    props[2] = avp::OutputStreamProperties("aac", sampleType, channelLayout, sampleRate, 128000);
+    options.clear();
+    options.push_back(std::make_pair("preset", "faster"));
+    ok = avWriter3.open(outFile, "", true, props, options);
+    //avReader.seek(1000000.0 / avReader.getVideoFps() * 5 + 0.5, avp::VIDEO);
+    while (avReader2.read(avFrame))
+    {
+        if (avFrame.mediaType == avp::AUDIO)
+        {
+            printf("audio frame, ts = %lld, numSamples = %d, numChannels = %d\n",
+                avFrame.timeStamp, avFrame.numSamples, avFrame.numChannels);
+            avWriter3.write(avFrame, 2);
+        }
+        else if (avFrame.mediaType == avp::VIDEO)
+        {
+            cv::Mat src(avFrame.height, avFrame.width, CV_8UC3, avFrame.data[0], avFrame.steps[0]);
+            cv::Mat dst;
+            cv::resize(src, dst, cv::Size(width / 2, height / 2));
+            avWriter3.write(avFrame, 0);
+            //avFrame = avp::videoFrame(dst.data, dst.step, avFrame.pixelType, dst.cols, dst.rows, avFrame.timeStamp);
+            unsigned char* data[8] = { dst.data, 0 };
+            int steps[8] = { dst.step[0], 0 };
+            avFrame = avp::AudioVideoFrame2(data, steps, avFrame.pixelType, dst.cols, dst.rows, avFrame.timeStamp);
+            avWriter3.write(avFrame, 1);
+            //printf("video frame, ts = %lld\n", avFrame.timeStampInMilliSec);
+            //cv::Mat show(avFrame.height, avFrame.width, CV_8UC3, avFrame.data, avFrame.step);
+            //cv::imshow("show", show);
+            //cv::waitKey(20);
+        }
+    }
 
     avReader2.close();
     avWriter3.close();

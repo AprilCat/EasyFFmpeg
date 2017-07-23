@@ -23,7 +23,7 @@ extern "C"
 }
 #endif
 
-inline struct AVRational avrational(int num, int den)
+inline AVRational avrational(int num, int den)
 {
     struct AVRational r;
     r.num = num;
@@ -105,37 +105,3 @@ void copyAudioData(const unsigned char** srcData, int srcPos, unsigned char** ds
 
 void setDataPtr(unsigned char* src, int srcStep, int numChannels, int sampleType, unsigned char* dst[8]);
 
-struct H264BitStreamFilterContext 
-{
-    int32_t  sps_offset;
-    int32_t  pps_offset;
-    uint8_t  length_size;
-    uint8_t  new_idr;
-    uint8_t  idr_sps_seen;
-    uint8_t  idr_pps_seen;
-    int      extradata_parsed;
-
-    uint8_t *spspps_buf;
-    uint32_t spspps_size;
-
-    H264BitStreamFilterContext()
-    {
-        memset(this, 0, sizeof(*this));
-    }
-    ~H264BitStreamFilterContext()
-    {
-        if (spspps_buf)
-            free(spspps_buf);
-    }
-
-    void reset()
-    {
-        if (spspps_buf)
-            free(spspps_buf);
-        memset(this, 0, sizeof(*this));
-    }
-};
-
-int h264_mp4toannexb_filter(H264BitStreamFilterContext *ctx,
-    uint8_t *ext_extradata, int32_t ext_extradata_size, const char *args, int *got_output,
-    uint8_t **poutbuf, int *poutbuf_size, int *poutbuf_capacity, const uint8_t *buf, int buf_size);
