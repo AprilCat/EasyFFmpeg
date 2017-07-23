@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\AudioVideoProcessor\AudioVideoGlobal.h" />
+    <ClInclude Include="..\..\AudioVideoProcessor\AudioVideoProcessor.h" />
+    <ClInclude Include="..\..\AudioVideoProcessor\AudioVideoProcessorUtil.h" />
+    <ClInclude Include="..\..\AudioVideoProcessor\AudioVideoStream.h" />
+    <ClInclude Include="..\..\AudioVideoProcessor\FFmpegUtil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoDevice.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoFrame.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoGlobal.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoReader.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoStreamReader.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoStreamWriter.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoWriter.cpp" />
+    <ClCompile Include="..\..\Test\TestAudioVideoProcessor.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\FFmpegUtil.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoProcessorUtil.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoReader2.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoReader3.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoWriter2.cpp" />
+    <ClCompile Include="..\..\AudioVideoProcessor\AudioVideoWriter3.cpp" />
+  </ItemGroup>
+</Project>
