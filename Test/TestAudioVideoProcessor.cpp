@@ -19,19 +19,21 @@ void copy()
 }
 
 // 1 just test simple audio video reading Using AudioVideoReader
-int main1()
+int main()
 {
     avp::AudioVideoFrame avFrame;
     avp::AudioVideoReader avReader;
     std::vector<avp::Option> options;
     bool ok;
 
-    options.push_back(std::make_pair("rtsp_transport", "tcp"));
+    //options.push_back(std::make_pair("rtsp_transport", "tcp"));
     ok = avReader.open(/*"F:\\video\\BBC.Frozen.Planet.S01E01.Chi_Eng.HR-HDTV.AC3.1024X576.x264.mkv"*/
-        /*"F:\\video\\高鑫投篮一分钟20140603.MOV"*/
         /*"F:\\panovideo\\test\\test5\\YDXJ0076.mp4"*/
-        "rtsp://192.168.1.113:554/test.sdp"
-        /*"E:\\Projects\\GitRepo\\panoCore\\PanoStitcher\\build\\x64\\Release\\temp1.mp4"*/, 
+        /*"rtsp://192.168.1.113:554/test.sdp"*/
+        /*"E:\\Projects\\GitRepo\\panoCore\\PanoStitcher\\build\\x64\\Release\\temp1.mp4"*/
+        /*"http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8"*/
+        /*"http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"*/
+        "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear2/prog_index.m3u8", 
         false, true, avp::PixelTypeBGR24, "", options);
     long long int lastTS = 0;
     while (avReader.read(avFrame))
@@ -169,7 +171,7 @@ int main3()
 }
 
 // 4 
-int main()
+int main4()
 {
     avp::AudioVideoFrame2 avFrame;
     avp::AudioVideoReader2 avReader2;
