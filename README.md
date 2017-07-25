@@ -27,3 +27,6 @@ while (reader.read(frame))
  1. `cv::VideoCapture::read` 函数返回的帧指向的是一块内部内存，如果需要一块深拷贝的帧，需要调用 `cv::Mat::clone()` 或者 `cv::Mat::copyTo()` 函数进行操作
  2. `cv::VideoWriter` 写的视频无法指定码率
  3. `cv::VideoWriter` 在 Windows 操作系统下要输出 H.264 格式编码的视频，需要重编译 opencv_ffmpeg.dll
+ 4. 这两个类无法处理音频
+
+当我们需要对视频文件进行更专业一些的处理的时候，还是得直接调用类似 FFmpeg 这样的库。最初的目标就是写两个类 `AudioVideoReader` 和 `AudioVideoWriter` 对 FFmpeg 进行封装，解决上述问题。
