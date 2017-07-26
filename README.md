@@ -31,7 +31,7 @@ while (reader.read(frame))
  5. `cv::VideoWriter` 在 Windows 操作系统下要输出 H.264 格式编码的视频，需要重编译 opencv_ffmpeg.dll。
  6. `cv::VideoCapture` 和 `cv::VideoWriter` 这两个类都无法处理音频。
 
-OpenCV 的视频读写不够强大，无法处理音频，所以最终还是得直接调用类似 FFmpeg 这样的库。最初的目标就是写两个类 `AudioVideoReader` 和 `AudioVideoWriter` 对 FFmpeg 进行封装，解决上述问题。
+OpenCV 的视频读写不够强大，无法处理音频，所以最终还是得直接调用 FFmpeg 进行更专业的编解码操作。目标就是写两个类 `AudioVideoReader` 和 `AudioVideoWriter` 对 FFmpeg 进行封装，解决上述问题。
 
 ## 第一版 avp::AudioVideoReader avp::AudioVideoWriter avp::AudioVideoFrame
 第一个版本的设计解决了上述的第 1, 3 , 5 和 6 这 4 个问题。
