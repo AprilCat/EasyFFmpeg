@@ -42,7 +42,7 @@ OpenCV 的视频读写不够强大，无法处理音频，所以最终还是得�
  3. `avp::AudioVideoFrame` 仅仅是一个内存的 wrapper，我没有实现这个类的拷贝控制成员函数。
  
 ## 第二版
-由于需求的进一步增多，我需要让自己的 `AudioVideoReader` 和 `AudioVideoWriter` 实现上述第 2 和 第 6 点功能。`avp::AudioVideoFrame` 的成员是无法表示 YUV420P，NV12 这种格式的帧的，所以我基本照搬了 FFmpeg AVFrame 的重要成员，完成了 `avp::AudioVideoFrame2`，这个类有这么几个特点：
+由于需求的进一步增多，我需要让自己的 `AudioVideoReader` 和 `AudioVideoWriter` 解决上述第 2 和 第 6 点两个问题。`avp::AudioVideoFrame` 的成员是无法表示 YUV420P，NV12 这种格式的帧的，所以我基本照搬了 FFmpeg AVFrame 的重要成员，完成了 `avp::AudioVideoFrame2`，这个类有这么几个特点：
  1. 能够兼容用 FFmpeg AVFrame 表示的常规的音视频帧。
  2. 具备内存管理功能，能进行拷贝控制。如果帧的数据内存由自己分配，通过引用计数管理内存。如果帧的数据内存是通过外部指针传入，禁用引用计数。
  3. 有构造函数，能按照指定的视频帧格式和音频帧格式构造帧。
@@ -75,4 +75,9 @@ OpenCV 的视频读写不够强大，无法处理音频，所以最终还是得�
 调用 Intel 和 NVIDIA 硬件编解码的代码 github 上没给出。
 
 ## 第三版
-最后又增加了一个新的需求，希望能够处理一个文件中存在超过一路音频流或者一路视频流的情况。前面的两个版本都无法处理这个情况。于是我写了 `avp::AudioVideoReader3`，它的实现类 `avp::AudioVideoReader3::Impl` 中有一个成员 `std::vector<std::unique_ptr<avp::StreamReader> >` 保存所有音视频流解码类的基类指针。相应的，对于写音视频，我写了 `avp::AudioVideoWriter3`，它的实现类 `avp::AudioVideoWriter3::Impl` 中有一个成员 `std::vector<std::unique_ptr<avp::StreamWriter> >` 保存所有音视频流编码类的基类指针。
+最后又需要解决前面所述第 7 个问题。前面的两个版本都无法处理这个情况。于是我写了 `avp::AudioVideoReader3`，它的实现类 `avp::AudioVideoReader3::Impl` 中有一个成员 `std::vector<std::unique_ptr<avp::StreamReader> >` 保存所有音视频流解码类的基类指针。相应的，对于写音视频，我写了 `avp::AudioVideoWriter3`，它的实现类 `avp::AudioVideoWriter3::Impl` 中有一个成员 `std::vector<std::unique_ptr<avp::StreamWriter> >` 保存所有音视频流编码类的基类指针。
+
+## 限制
+本代码开发基本上是基于 FFmpeg 2.8.6，进入 3.0.0 系列后结构发生了很大变化 `AVStream` 中不再有 `AVCodecContext *` 成员，libavcodec 修改了编解码 API。
+
+本代码仅在 Windows 平台上测试过。现在 FFmpeg 官网上提供的 Windows 下预编译好的二进制文件已经找不到 2.8.6 版本的了，不过我的 github 上还是给出了这个版本的头文件和 64 位的库文件。
