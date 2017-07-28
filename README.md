@@ -52,6 +52,7 @@ OpenCV 的视频读写不够强大，无法处理音频，所以最终还是得�
 问题来了，第一版的 `avp::AudioVideoReader::Impl` 和 `avp::AudioVideoWriter::Impl` 内部都是 FFmpeg 的数据结构，而且堆叠摆放，如何加入第三方非 FFmpeg 的类型就成了新的问题。注意到音视频文件都是按照 stream 组织的，FFmpeg `AVFormatContext` 中也有 `AVStream *` 类型的 `streams` 这个成员。因此我决定第二版的 `avp::AudioVideoReader2::Impl` 内部采用 `avp::StreamReader` 进行组织。`avp::AudioStreamReader` 继承 `avp::StreamReader` 处理音频流。`avp::VideoStreamReader` 继承 `avp::StreamReader` 处理视频流。 `avp::AudioVideoReader2::Impl` 中有成员 `std::unique_ptr<avp::AudioStreamReader> audioStream` 和 `std::unqiue_ptr<avp::VideoStreamReader> videoStream` 分别表示音频流和视频流。`avp::VideoStreamReader` 是一个基类，它有两个派生类：
  1. `avp::BuiltinCodecVideoStreamReader` 直接调用 FFmpeg 自带的解码器进行解码的视频流。
  2. `avp::QsvVideoStreamReader` 调用 Intel Quick Sync Video 进行解码的视频流。
+![](Doc/StreamReader.png)
 
 这样，类的层次架构就设计好了。
 
@@ -59,5 +60,6 @@ OpenCV 的视频读写不够强大，无法处理音频，所以最终还是得�
  1. `avp::BuiltinCodecVideoStreamWriter` 直接调用 FFmpeg 自带的解码器进行编码的视频流。
  2. `avp::QsvVideoStreamWriter` 调用 Intel Quick Sync Video 进行编码的视频流。
  3. `avp::NVENCVideoStreamWriter` 调用 NVDIA NVENC 进行编码的视频流。
+ ![](Doc/StreamWriter.png)
  
 调用 Intel 和 NVIDIA 硬件编解码的代码 github 上没给出。
