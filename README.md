@@ -73,3 +73,6 @@ OpenCV 的视频读写不够强大，无法处理音频，所以最终还是得�
 ![](Doc/StreamWriter.png)
  
 调用 Intel 和 NVIDIA 硬件编解码的代码 github 上没给出。
+
+## 第三版
+最后又增加了一个新的需求，希望能够处理一个文件中存在超过一路音频流或者一路视频流的情况。前面的两个版本都无法处理这个情况。于是我写了 `avp::AudioVideoReader3`，它的实现类 `avp::AudioVideoReader3::Impl` 中有一个成员 `std::vector<std::unique_ptr<avp::StreamReader> >` 保存所有音视频流解码类的基类指针。相应的，对于写音视频，我写了 `avp::AudioVideoWriter3`，它的实现类 `avp::AudioVideoWriter3::Impl` 中有一个成员 `std::vector<std::unique_ptr<avp::StreamWriter> >` 保存所有音视频流编码类的基类指针。
