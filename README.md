@@ -101,7 +101,7 @@ private:
 最后又需要解决前面所述第 7 个问题。前面的两个版本都无法处理这个情况。于是我写了 `avp::AudioVideoReader3`，它的实现类 `avp::AudioVideoReader3::Impl` 中有一个成员 `std::vector<std::unique_ptr<avp::StreamReader> >` 保存所有音视频流解码类的基类指针。相应的，对于写音视频，我写了 `avp::AudioVideoWriter3`，它的实现类 `avp::AudioVideoWriter3::Impl` 中有一个成员 `std::vector<std::unique_ptr<avp::StreamWriter> >` 保存所有音视频流编码类的基类指针。
 
 ## 限制
-本代码开发基本上是基于 FFmpeg 2.8.6，进入 3.0.0 系列后结构发生了很大变化 `AVStream` 中不再有 `AVCodecContext *` 成员，libavcodec 修改了编解码 API。
+本代码开发基本上是基于 FFmpeg 2.8.6，进入 3.0.0 系列后 FFmpeg 数据结构结构发生了很大变化 `AVStream` 中不再有 `AVCodecContext *` 成员，libavcodec 修改了编解码 API。
 
 本代码仅在 Windows 平台上测试过。现在 FFmpeg 官网上提供的 Windows 下预编译好的二进制文件已经找不到 2.8.6 版本的了，不过我的 github 上还是给出了这个版本的头文件和 64 位的库文件。
 
