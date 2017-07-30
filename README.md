@@ -68,6 +68,37 @@ private:
  1. 能够兼容用 FFmpeg AVFrame 表示的常规的音视频帧。
  2. 有构造函数，能按照指定的视频帧格式和音频帧格式构造帧。
  3. 具备内存管理功能，能进行拷贝控制。如果帧的数据内存由当前实例分配，通过引用计数管理内存。如果帧的数据内存是通过外部指针传入，禁用引用计数。
+```c++
+namespace avp
+{
+struct AudioVideoFrame2
+{
+    // ...
+    
+    // 通过外部内存构造音频帧，构造出的实例不管理内存
+    AudioVideoFrame2(unsigned char** data, int step, int sampleType, int numChannels, int channelLayout,
+        int numSamples, long long int timeStamp = -1LL, int frameIndex = -1);
+
+    // 通过外部内存构造视频帧，构造出的实例不管理内存
+    AudioVideoFrame2(unsigned char** data, int* steps, int pixelType, int width, int height,
+        long long int timeStamp = -1LL, int frameIndex = -1);
+
+    // 构造音频帧，分配内存，通过引用计数管理内存
+    AudioVideoFrame2(int sampleType, int numChannels, int channelLayout, int numSamples,
+        long long int timeStamp = -1LL, int frameIndex = -1);
+
+    // 构造视频帧，分配内存，通过引用计数管理内存
+    AudioVideoFrame2(int pixelType, int width, int height, long long int timeStamp = -1LL, int frameIndex = -1);
+
+    //...
+    
+    std::shared_ptr<unsigned char> sdata; // 通过智能指针管理内存
+    unsigned char* data[8];  // 兼容 AVFrame::data
+    int steps[8];  // 兼容 AVFrame::linesize
+    // ...
+};
+}
+```
  
 当时还有个支持硬件编解码的需求，就是调用 Intel Quick Sync Video 和 NVIDIA NVENC 对 H.264 视频进行编解码。尽管 FFmpeg 支持这两个第三方库，但是兼容性并不理想。记得 2016 年初还在 Intel 的官方论坛上，看到有开发人员问为什么通过 FFmpeg 调用 Intel 的解码器，解出来的视频帧数量不对的问题。结果被 Intel 的支持怼回去说是 FFmpeg 的问题，用我们自家的 sample 解码没问题，╮(╯_╰)╭。所以我干脆就自己封装这两个硬件解码库。新版的音视频读写类是 `avp::AudioVideoReader2`，`avp::AudioVideoWriter2`，这两个类的实现类是 `avp::AudioVideoReader2::Impl`，`avp::AudioVideoWriter2::Impl`。
 
