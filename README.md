@@ -100,12 +100,13 @@ struct AudioVideoFrame2
 }
 ```
  
-当时还有个支持硬件编解码的需求，就是调用 Intel Quick Sync Video 和 NVIDIA NVENC 对 H.264 视频进行编解码。尽管 FFmpeg 支持这两个第三方库，但是兼容性并不理想。记得 2016 年初还在 Intel 的官方论坛上，看到有开发人员问为什么通过 FFmpeg 调用 Intel 的解码器，解出来的视频帧数量不对的问题。结果被 Intel 的支持怼回去说是 FFmpeg 的问题，用我们自家的 sample 解码没问题，╮(╯_╰)╭。所以我干脆就自己封装这两个硬件解码库。新版的音视频读写类是 `avp::AudioVideoReader2`，`avp::AudioVideoWriter2`，这两个类的实现类是 `avp::AudioVideoReader2::Impl`，`avp::AudioVideoWriter2::Impl`。
+当时还有个支持硬件编解码的需求，就是调用 Intel Quick Sync Video 和 NVIDIA NVENC 对 H.264 视频进行编解码。尽管 FFmpeg 支持这两个第三方库，但是兼容性并不理想。记得 2016 年初还在 Intel 的官方论坛上，看到有开发人员问为什么通过 FFmpeg 调用 Intel 的解码器，解出来的视频帧数量不对的问题。结果被 Intel 的支持怼回去说是 FFmpeg 的问题，用我们自家的 sample 解码没问题，╮(╯_╰)╭。所以我决定自己封装这两个硬件解码库。
 
-这一版，除了重新设计了带引用计数和拷贝控制的 `avp::AudioVideoFrame2`，另一点就是如何同时兼容 FFmpeg
-自己的编解码功能和需要我自己封装的编解码功能。注意到音视频文件都是按照 stream 组织的，FFmpeg `AVFormatContext` 中也有 `AVStream *` 类型的 `streams` 这个成员。因此我决定这么处理：
+如何同时兼容 FFmpeg 自己管理的编解码功能和需要我自己封装的编解码功能，成了这一版修改的重要问题。注意到音视频文件都是按照 stream 组织的，FFmpeg `AVFormatContext` 中也有 `AVStream *` 类型的 `streams` 这个成员。因此我决定这么处理：
 
-`avp::AudioVideoReader2::Impl` 内部采用 `avp::StreamReader` 进行组织：
+定义新版的音视频读写类的接口类`avp::AudioVideoReader2` 和 `avp::AudioVideoWriter2`，这两个类的实现类分别是 `avp::AudioVideoReader2::Impl` 和 `avp::AudioVideoWriter2::Impl`。
+
+对于解码， `avp::AudioVideoReader2::Impl` 内部采用 `avp::StreamReader` 进行组织：
  * `avp::AudioStreamReader` 继承 `avp::StreamReader` 处理音频流。
  * `avp::VideoStreamReader` 继承 `avp::StreamReader` 处理视频流。 
 
@@ -115,7 +116,7 @@ struct AudioVideoFrame2
 
 ![](Doc/StreamReader.png)
 
-音视频编码类也是采用了类似的做法。 `avp::AudioVideoWriter2::Impl` 内部采用 `avp::StreamWriter` 进行组织：
+对于编码，也采用了类似的做法。 `avp::AudioVideoWriter2::Impl` 内部采用 `avp::StreamWriter` 进行组织：
  * `avp::AudioStreamWriter` 继承 `avp::StreamWriter` 处理音频流。
  * `avp::VideoStreamWriter` 继承 `avp::StreamWriter` 处理视频流。 
 
